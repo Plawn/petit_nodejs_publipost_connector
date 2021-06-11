@@ -2,10 +2,10 @@ import { SafeMap } from './utils';
 
 export interface Template {
     getAllPlaceholders: () => string[];
-    render: (data: any, options?: string[]) => any;
+    render: (data: any, options?: string[]) => Buffer;
 }
 
-export type TemplateConstructor<T extends Template> = new (file: any, options?: any) => T;
+export type TemplateConstructor<T extends Template> = new (file: Buffer, options?: any) => T;
 
 class TemplateContainer<T extends Template> {
     pulled_at: number;
@@ -19,7 +19,7 @@ class TemplateContainer<T extends Template> {
         this.placeHolders = this.template.getAllPlaceholders();
     }
 
-    render(data: any, options?: string[]): any {
+    render(data: any, options?: string[]): Buffer {
         return this.template.render(data, options);
     }
 
