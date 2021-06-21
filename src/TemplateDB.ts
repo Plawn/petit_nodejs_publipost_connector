@@ -2,7 +2,8 @@ import { SafeMap } from './utils';
 
 export interface Template {
     getAllPlaceholders: () => string[];
-    render: (data: any, options?: string[]) => Buffer;
+    render: (data: any, options?: string[]) => Promise<Buffer>;
+    init:() => Promise<void>;
 }
 
 export type TemplateConstructor<T extends Template> = new (file: Buffer, options?: any) => T;
@@ -19,7 +20,7 @@ class TemplateContainer<T extends Template> {
         this.placeHolders = this.template.getAllPlaceholders();
     }
 
-    render(data: any, options?: string[]): Buffer {
+    async render(data: any, options?: string[]): Promise<Buffer> {
         return this.template.render(data, options);
     }
 
@@ -37,9 +38,10 @@ class TemplateDB<T extends Template> {
         this.templates = new SafeMap();
     }
 
-    addTemplate = (name: string, data: Buffer) => {
+    addTemplate = async (name: string, data: Buffer) => {
         const now = new Date().getTime() / 1000; // we get the time in millis and we want it in seconds
         const template = new this.templateClass(data);
+        await template.init();
         this.templates.set(name, new TemplateContainer(now, template));
     }
 

@@ -20,7 +20,7 @@ function makeConnector<T extends Template>(templateClass: TemplateConstructor<T>
             return res.status(402).send({ error: true });
         }
         const data: reqPubli = req.body;
-        const rendered = db.renderTemplate(data.template_name, data.data);
+        const rendered = await db.renderTemplate(data.template_name, data.data);
         // could have some abstraction here
         await config.minio.putObject(data.output_bucket, data.output_name, rendered);
         res.send({ error: false });
