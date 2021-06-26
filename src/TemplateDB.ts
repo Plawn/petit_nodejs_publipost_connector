@@ -20,7 +20,7 @@ class TemplateContainer<T extends Template> {
         this.placeHolders = this.template.getAllPlaceholders();
     }
 
-    async render(data: any, options?: string[]): Promise<Buffer> {
+    render(data: any, options?: string[]): Promise<Buffer> {
         return this.template.render(data, options);
     }
 
